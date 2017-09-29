@@ -4,9 +4,9 @@ class gameOverMessages{
       
   }
   void rollRandomMessage(){
-      message = int(random(7));
-      if(message==7){
-          message=6;
+      message = int(random(8));
+      if(message==8){
+          message=7;
       }
   }
   void displayMessage(){
@@ -30,6 +30,9 @@ class gameOverMessages{
      }
      if(message==6){
         text("What are you going to do, cry?",115,350); 
+     }
+     if(message==7){
+        text("It's like you are standing still.",115,350); 
      }
   }
 }

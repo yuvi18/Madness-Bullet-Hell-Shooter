@@ -68,9 +68,10 @@ class ellipseBullets {
 
   }
   void checkCollision() {
-    if (thePlayer.x+5>x-diameter1/2 && thePlayer.x-5<x+diameter1/2 && thePlayer.y+5>y-diameter2/2 && thePlayer.y-5<y+diameter2/2 && notDead) {
-      gameOver = true;
-    }
+    //Uncomment when level made
+    //if (thePlayer.x+5>x-diameter1/2 && thePlayer.x-5<x+diameter1/2 && thePlayer.y+5>y-diameter2/2 && thePlayer.y-5<y+diameter2/2 && notDead) {
+    //  gameOver = true;
+    //}
   }
   void deleteSelf(){
     notDead=false;

@@ -97,6 +97,15 @@ class bulletFunctions {
       ellipseBullets.get(i).deleteSelf();
       }
   }
+  void changeBackground(float []parameters){
+    float r = parameters[0];
+    float g = parameters[1]; 
+    float b = parameters[1]; 
+    bGR = r;
+    bGG = g;
+    bGB = b;
+   
+  }
   void changeSpeedEllipseBullets(float[] parameters){
       float tempSpeedX = parameters[0];
       float tempSpeedY = parameters[1]; 
@@ -105,25 +114,25 @@ class bulletFunctions {
       //God help me who  knew changing the speed was so freaken complicated.
       boolean notChangedSpeed = true;
       //Bottom Right Moving Bullet
-      if(bullet.speedX>0 && bullet.speedY>0 && notChangedSpeed){
+      if(bullet.speedX>=0 && bullet.speedY>=0 && notChangedSpeed){
             bullet.speedX = tempSpeedX;
             bullet.speedY = tempSpeedY;
             notChangedSpeed=false;
       }
       //Top Left Moving Bullet
-      if(bullet.speedX<0 && bullet.speedY<0 && notChangedSpeed){
+      if(bullet.speedX<=0 && bullet.speedY<=0 && notChangedSpeed){
             bullet.speedX = -tempSpeedX;
             bullet.speedY = -tempSpeedY;
             notChangedSpeed=false;
       }
       //Bottom Left Moving Bullet
-      if(bullet.speedX<0 && bullet.speedY>0 && notChangedSpeed){
+      if(bullet.speedX<=0 && bullet.speedY>=0 && notChangedSpeed){
             bullet.speedX = -tempSpeedX;
             bullet.speedY = tempSpeedY;
             notChangedSpeed=false;
       }
       //Top Right Moving Bullet
-      if(bullet.speedX>0 && bullet.speedY<0 && notChangedSpeed){
+      if(bullet.speedX>=0 && bullet.speedY<=0 && notChangedSpeed){
             bullet.speedX = tempSpeedX;
             bullet.speedY = -tempSpeedY;
              notChangedSpeed=false;

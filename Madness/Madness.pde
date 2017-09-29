@@ -4,9 +4,11 @@
 import lord_of_galaxy.timing_utils.*;
 import ddf.minim.*;
 //Time Stamps for Each Level
-int[] level1 = {3900, 4300, 4800, 5000, 5200, 5300, 5600, 5800, 6000, 6200, 7000, 7200, 7500, 7700, 8000, 8200, 9000, 9200, 9400, 9500, 9700, 9900, 10100, 10300, 10500, 10700, 10900, 11100, 11300, 11500,11900,12400, 12600 ,12800,12900,13200,13400, 13600, 13800, 14600, 14800, 15100, 15300, 15600, 15800, 16600, 16800, 17000, 17100,17300,17500,18300,19000,21100,23000,23500,24000,24500,25000,27000,29000,31000,31500,32000,32500,33000,35000,36800,38800,39300,39800,40300,40800,42500,44600,46600,47100,47600,48100,48600};
+int[] level1 = {3900, 4300, 4800, 5000, 5200, 5300, 5600, 5800, 6000, 6200, 7000, 7200, 7500, 7700, 8000, 8200, 9000, 9200, 9400, 9500, 9700, 9900, 10100, 10300, 10500, 10700, 10900, 11100, 11300, 11500, 11900, 12400, 12600, 12800, 12900, 13200, 13400, 13600, 13800, 14600, 14800, 15100, 15300, 15600, 15800, 16600, 16800, 17000, 17100, 17300, 17500, 18300, 19000, 21100, 23000, 23500, 24000, 24500, 25000, 27000, 29000, 31000, 31500, 32000, 32500, 33000, 35000, 36800, 38800, 39300, 39800, 40300, 40800, 42500, 44600, 46600, 47100, 47600, 48100, 48600};
+int[] level2 = {};
 //Level Jsons (Bullets)
 JSONArray json1;
+JSONArray json2;
 //Some Variables
 Minim minim;
 Person thePlayer;
@@ -26,7 +28,11 @@ int lastGameState =1;
 int i =0;
 int j =0;
 int k = 0;
-
+//Other Stuff
+float precentDone=0;
+float bGR = 255;
+float bGG = 255;
+float bGB = 255;
 void setup() {
   size(500, 500);
   //Gotta Initiate those Clases
@@ -38,6 +44,13 @@ void setup() {
   thePlayer = new Person(250, 250, 0, 10);
   //Saying What The Jsons are
   json1 = loadJSONArray("Level_Jsons/level1.json");
+  json2 = loadJSONArray("Level_Jsons/level2.json");
+  //Too lazy to make this a function
+  JSONArray tempJson = loadJSONArray("Level_Jsons/level2Time.json");
+  for (int l=0; l<tempJson.size(); l++) {
+    int item = tempJson.getInt(l);
+    level2 = append(level2, item);
+  }
 } 
 int gameState = 1;
 void draw() {
@@ -62,9 +75,10 @@ void draw() {
     lastGameState=2;
     background(255);
     if (!loadedMusic) {
-        player = minim.loadFile("levelMusic/LoneDigger.mp3");
+      player = minim.loadFile("levelMusic/LoneDigger.mp3");
       player.play();
       bT.start();
+      precentDone=0;
       loadedMusic=true;
     }
 
@@ -113,55 +127,138 @@ void draw() {
           //float[] test = {250,250,1,0,1,1,0,0,10,10,25,25};
           //bf.spawnBullet(test);
           //Really Messy JSON Stuff ;-;
-          
+
           JSONArray commands = json1.getJSONArray(i);
           JSONArray commandInfo = commands.getJSONArray(0);
           JSONObject commandInfoAgain = commandInfo.getJSONObject(0);
           int numberOfCommands = commandInfoAgain.getInt("#OfCommands");
-          for(j=1;j<numberOfCommands+1;j++){
-             String command = commandInfoAgain.getString("Command"+j);
-   
-             JSONArray parameters = commands.getJSONArray(j);
-         
-             float[] parametersAgain = {};
-             for(k=0;k<parameters.size();k++){
-                 float parameter = parameters.getFloat(k);
-                 parametersAgain = append(parametersAgain,parameter);
-             }
-             if(command.equals("ellipseBurst4")){
-                 bf.EllipseBurst4(parametersAgain);
-                 
-             }
-             if(command.equals("changeSpeedEllipseBullets")){
-               bf.changeSpeedEllipseBullets(parametersAgain);
-                 
-             }
-             if(command.equals("ellipseBurst8")){
-                 bf.EllipseBurst8(parametersAgain);
-                 
-             }
-             if(command.equals("spawnBullet")){
-                 bf.spawnBullet(parametersAgain);
-                 
-             }
+          for (j=1; j<numberOfCommands+1; j++) {
+            String command = commandInfoAgain.getString("Command"+j);
+
+            JSONArray parameters = commands.getJSONArray(j);
+
+            float[] parametersAgain = {};
+            for (k=0; k<parameters.size(); k++) {
+              float parameter = parameters.getFloat(k);
+              parametersAgain = append(parametersAgain, parameter);
+            }
+            if (command.equals("ellipseBurst4")) {
+              bf.EllipseBurst4(parametersAgain);
+            }
+            if (command.equals("changeSpeedEllipseBullets")) {
+              bf.changeSpeedEllipseBullets(parametersAgain);
+            }
+            if (command.equals("ellipseBurst8")) {
+              bf.EllipseBurst8(parametersAgain);
+            }
+            if (command.equals("spawnBullet")) {
+              bf.spawnBullet(parametersAgain);
+            }
+            if (command.equals("changeBackground")) {
+              bf.changeBackground(parametersAgain);
+            }
           }
-          
+
           i++;
         }
       }
-     
+
       bf.draw();
       thePlayer.setXandY(mouseX, mouseY);
       thePlayer.draw();
       fill(0);
-      rect(0,0,500,10);
-      rect(0,490,500,10);
-      rect(0,0,10,500);
-      rect(490,0,10,500);
+      rect(0, 0, 500, 10);
+      rect(0, 490, 500, 10);
+      rect(0, 0, 10, 500);
+      rect(490, 0, 10, 500);
       if (mouseX>490 || mouseX<10 || mouseY>490 || mouseY<10) {
         gameOver=true;
       }
     }
+  }
+  if (gameState==3) {
+    lastGameState=3;
+    background(bGR,bGG,bGB);
+    if (!loadedMusic) {
+      player = minim.loadFile("levelMusic/Genie.mp3");
+      player.play();
+      bT.start();
+      precentDone=0;
+      loadedMusic=true;
+    }                                                                                                                                                         
+    textSize(10);
+    if (gameOver==false) {
+      //Goes through array of timestamps
+      if (i<level2.length) {
+        if (bT.time()>level2[i]) {   
+          //Run Commands
+          //Delete when done with timing
+          if(bT.time()<17000){
+          float[] test = {random(100,400),random(100,400),1,1,1.01,1.01,0,0,5,5,25,25};
+          bf.EllipseBurst4(test);
+          }
+          if(bT.time()>17500 && bT.time()<19500){
+             textSize(20);
+             fill(0);
+             text("EZ Right?",220,230);
+          }
+          //Really Messy JSON Stuff ;-;
+          //Uncomment when done for timing
+          if(bT.time()>17000){
+          JSONArray commands = json2.getJSONArray(i-56);
+          JSONArray commandInfo = commands.getJSONArray(0);
+          JSONObject commandInfoAgain = commandInfo.getJSONObject(0);
+          int numberOfCommands = commandInfoAgain.getInt("#OfCommands");
+          for (j=1; j<numberOfCommands+1; j++) {
+            String command = commandInfoAgain.getString("Command"+j);
+
+            JSONArray parameters = commands.getJSONArray(j);
+
+            float[] parametersAgain = {};
+            for (k=0; k<parameters.size(); k++) {
+              float parameter = parameters.getFloat(k);
+              parametersAgain = append(parametersAgain, parameter);
+            }
+            if (command.equals("ellipseBurst4")) {
+              bf.EllipseBurst4(parametersAgain);
+            }
+            if (command.equals("skip")) {
+            }
+            if (command.equals("changeSpeedEllipseBullets")) {
+              bf.changeSpeedEllipseBullets(parametersAgain);
+            }
+            if (command.equals("ellipseBurst8")) {
+              bf.EllipseBurst8(parametersAgain);
+            }
+            if (command.equals("spawnBullet")) {
+              bf.spawnBullet(parametersAgain);
+            }
+            if (command.equals("changeBackground")) {
+              bf.changeBackground(parametersAgain);
+            }
+          }
+          }
+          i++;
+          
+        }
+      }
+
+      bf.draw();
+      thePlayer.setXandY(mouseX, mouseY);
+      thePlayer.draw();
+      fill(0);
+      rect(0, 0, 500, 10);
+      rect(0, 490, 500, 10);
+      rect(0, 0, 10, 500);
+      rect(490, 0, 10, 500);
+      fill(0,0,255);
+      rect(10,0,precentDone*4.8000000,10);
+      precentDone = bT.time()*100.000000/188000.000000;
+      if (mouseX>490 || mouseX<10 || mouseY>490 || mouseY<10) {
+        gameOver=true;
+      }
+    }
+    
   }
   if (gameState==11) {
     gameOver=false;
@@ -212,6 +309,6 @@ void mouseClicked() {
     gameState=1;
   }
   if (mouseX>150 && mouseX<350 && mouseY>150 && mouseY<350 && gameState==1) {
-    gameState=2;
+    gameState=3;
   }
 };
