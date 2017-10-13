@@ -1,5 +1,5 @@
 //Stand Alone Script that times the bullets and creates an array due to human input
-int[] levelArray = {};
+int[] levelArray = {}; 
 import lord_of_galaxy.timing_utils.*;
 import ddf.minim.*;
 Stopwatch bT;
@@ -9,11 +9,11 @@ Stopwatch bT;
 void setup(){
   background(255);
   size(500, 500);
-  tempJson = new JSONArray();
+   tempJson = new JSONArray();
   bT = new Stopwatch(this);
   minim = new Minim(this);
   //Change Song here
-  player = minim.loadFile("../../levelMusic/Angel.mp3");
+  player = minim.loadFile("../../levelMusic/LoneDigger.mp3");
   player.play();
   bT.start();
 };
@@ -33,5 +33,6 @@ void mouseClicked() {
   int arrayItem = levelArray[i];
   tempJson.setInt(i,arrayItem);
   }
-  saveJSONArray(tempJson, "tempJSON.json");
+  //Where you want to save it
+  saveJSONArray(tempJson, "../Level_Jsons/level1Time.json");
 };
